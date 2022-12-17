@@ -1,0 +1,5 @@
+
+urlid sgh
+url jdbc:hsqldb:file:../db/sgh
+username sa
+password

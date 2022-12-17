@@ -1,0 +1,39 @@
+
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+
+
+# db
+db/test.*
+
+
+# External tool builders
+.externalToolBuilders/
+
+
+# Java annotation processor (APT)
+.factorypath
+
+
+### Mac ###
+*.DS_Store
+
+
+### Windows ###
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+desktop.ini
+*.lnk
+
+
+
