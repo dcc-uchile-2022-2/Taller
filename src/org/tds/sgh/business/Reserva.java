@@ -4,7 +4,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Reserva {
 	
@@ -18,6 +20,8 @@ public class Reserva {
 	private GregorianCalendar fechaFin;
 	private boolean modificablePorHuesped;
 	private EstadoReserva estado;		
+	
+	private Set<Huesped> huespedes;
 
 
 	public Reserva(Cliente cliente, int codigo, GregorianCalendar fechaInicio, GregorianCalendar fechaFin, boolean modificablePorHuesped, EstadoReserva estado) { 
@@ -27,52 +31,41 @@ public class Reserva {
 		this.fechaFin = fechaFin;
 		this.modificablePorHuesped = modificablePorHuesped;
 		this.estado=estado;		
+		this.huespedes = new HashSet<Huesped>();
 	}	
 	
 
 
-	public Reserva create(String tipoHabitacion, Cliente cliente, GregorianCalendar fechaInicio, GregorianCalendar fechaFin, boolean modificablePorHuesped) {
-		return hotel.crearReserva(tipoHabitacion, cliente, fechaInicio, fechaFin, modificablePorHuesped);		
-	}
 
 	
 	public boolean coincide(String nombreTipoHabitacion, GregorianCalendar fechaInicio, GregorianCalendar fechaFin) {
-		
+		return this.tipoHabitacion.equals(nombreTipoHabitacion) &&
+				this.fechaInicio.equals(fechaInicio) && 
+				this.fechaFin.equals(fechaFin);
 	}
 	
 	
-	public List<Reserva> add(Reserva reserva){
+	/*public List<Reserva> add(Reserva reserva){
 		
 		 
-	}
+	}*/
 	
 	public boolean esDelCliente(Cliente cliente) {
+		return this.cliente.equals(cliente);
 		
 	}
-	
-	public List<Huesped> registrarHuesped(String nombre, String documento){
+	public Set<Huesped> registrarHuesped(String nombre, String documento){
 		
-		
-		
+		Huesped h = new Huesped(nombre,documento);
+		this.huespedes.add(h);
+		return this.huespedes;
 	}
 	
-	public String setEstado(String stado) {
-		
-		
-		
+	public void setEstado( EstadoReserva estado ) {
+		this.estado = estado;
+		return ;
 	}
 	
-	public void iniciarEstadia() {
-		
-		
-	}
-	
-	
-	public void iniciarFacturacion() {
-		
-		
-	}
-
 	public Cliente getCliente() {
 		return this.cliente;
 	}
