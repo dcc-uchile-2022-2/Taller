@@ -15,7 +15,7 @@ public class Reserva {
 	private boolean modificablePorHuesped;
 	private EstadoReserva estado;		
 <<<<<<< HEAD
-	
+
 =======
 
 >>>>>>> origin/AlejandroCortes
