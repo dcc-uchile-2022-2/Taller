@@ -28,4 +28,5 @@ public class Habitacion
 	{
 		return this.tipoHabitacion;
 	}
+	
 }

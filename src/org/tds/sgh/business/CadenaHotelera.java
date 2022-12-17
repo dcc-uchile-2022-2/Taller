@@ -174,18 +174,19 @@ public class CadenaHotelera
 		this.clientes.put(rut, cliente);
 	}
 	
-	public List<Hotel> sugerirAlternativas(String pais, String nombreTipoHabitacion, GregorianCalendar fechaInicio, GregorianCalendar fechaFin) {
+	public Set<Hotel> sugerirAlternativas(String pais, String nombreTipoHabitacion, GregorianCalendar fechaInicio, GregorianCalendar fechaFin) {
 		
-		List<Hotel> hotelesConDisp = new ArrayList<Hotel>();
+		Set<Hotel> hotelesConDisp = new HashSet<Hotel>();
 		
 		for (Hotel h: this.hotelesList) {
-			boolean mismoPais = h.enPais(pais);
-			if (mismoPais) {
-				boolean disp = h.confirmarDisponibilidad(nombreTipoHabitacion, fechaInicio, fechaFin);
-				if (disp) {
-					hotelesConDisp.add(h);
-				}
+			if (!h.enPais(pais)) {
+				continue ;
 			}
+			if(!h.confirmarDisponibilidad(nombreTipoHabitacion, fechaInicio, fechaFin)) {
+				continue;
+			}
+		
+			hotelesConDisp.add(h);			
 		}
 		
 		return hotelesConDisp;
@@ -193,10 +194,10 @@ public class CadenaHotelera
 	
 	public boolean confirmarDisponibilidad(String nombreHotel, String nombreTipoHabitacion, GregorianCalendar fechaInicio, GregorianCalendar fechaFin) {
 		Hotel hotel = this.hoteles.get(nombreHotel);
-		return  hotel.confirmarDisponibilidad(nombreTipoHabitacion, fechaInicio, fechaFin);;
+		return  hotel.confirmarDisponibilidad(nombreTipoHabitacion, fechaInicio, fechaFin);
 	}
 	
-	public Reserva registrarReserva(String nombreHotel, String nombreTipoHabitacion, Cliente cliente, GregorianCalendar fechaInicio, GregorianCalendar fechaFin, boolean modificablePorHuesped) {
+	public Reserva registrarReserva( Cliente cliente, String nombreHotel, String nombreTipoHabitacion, GregorianCalendar fechaInicio, GregorianCalendar fechaFin, boolean modificablePorHuesped) {
 		Hotel h = this.hoteles.get(nombreHotel);
 		TipoHabitacion th = this.tiposHabitacion.get(nombreTipoHabitacion);
 		Reserva r = h.crearReserva(th, cliente, fechaInicio, fechaFin, modificablePorHuesped);
@@ -204,24 +205,28 @@ public class CadenaHotelera
 
 	}
 	
-	public List<Reserva> buscarReservasDelCliente(Cliente cliente) {
-		List<Reserva> rs = new ArrayList<Reserva>();
+	public Set<Reserva> buscarReservasDelCliente(Cliente cliente) {
+		Set<Reserva> rs = new HashSet<Reserva>();
 		for (Hotel h: this.hotelesList) {
-			Reserva resHotelCliente = h.buscarReservasCliente(cliente);
-			rs.add(resHotelCliente);
+			Set<Reserva> resHotelCliente = h.buscarReservasCliente(cliente);
+			rs.addAll(resHotelCliente);
 		}
 		return rs;
 	}
 
-	public Cliente buscarClientePorRut(String rut) {
+	public Cliente buscarClientePorRut(String rut) throws Exception {
 		return this.buscarCliente(rut);
 	}
 
-	public Reserva modificarReserva(String nh, String nth, GregorianCalendar fi, GregorianCalendar ff, boolean mph) {
-		Hotel h = this.hoteles.get(nh);
-		TipoHabitacion th = this.tiposHabitacion.get(nth);
-		Reserva r = h.crearReserva(th, this.cliente, fi, ff, mph);
-		return r;
+	public Reserva modificarReserva(String nombreHotel, String nombreTipoHabitacion, GregorianCalendar fi, GregorianCalendar ff, boolean mph) {
+
+		Hotel h = this.hoteles.get(nombreHotel);
+		for (Reserva reserva : h.getReservas() ) {
+			if ( reserva.coincide(nombreTipoHabitacion, ff, fi) ) {
+				return reserva;
+			}			
+		}
+		return null;
 	}
 	
 		

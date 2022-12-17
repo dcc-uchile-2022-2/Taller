@@ -1,11 +1,14 @@
 package org.tds.sgh.dtos;
 
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.tds.sgh.business.Cliente;
 import org.tds.sgh.business.Habitacion;
 import org.tds.sgh.business.Hotel;
+import org.tds.sgh.business.Huesped;
+import org.tds.sgh.business.Reserva;
 import org.tds.sgh.business.TipoHabitacion;
 
 
@@ -45,6 +48,33 @@ public class DTO
 		return new HotelDTO(hotel.getNombre(), hotel.getPais());
 	}
 	
+	
+	public ReservaDTO map(Reserva reserva)
+	{		
+		long num = reserva.getCodigo();	
+		return new ReservaDTO(num,
+				reserva.getCliente().getRut(),
+				reserva.getHotel().getNombre(),
+				reserva.getTipoHabitacion().getNombre(),
+				reserva.getFechaInicio(),
+				reserva.getFechaFin(),
+				reserva.getModificablePorHuesped(),
+				reserva.getTipoReserva().toString(),
+				"", 
+				this.mapHuespedes(reserva.getHuespedes()) );
+	}
+	
+	
+	public HuespedDTO[] mapHuespedes(Set<Huesped>  huespedes) {
+		// TODO Auto-generated method stub
+		
+		Set<HuespedDTO> hs = new HashSet<HuespedDTO>();
+		for (Huesped h : huespedes ) {
+			hs.add(new HuespedDTO(h.getNombre(),h.getDocumento()));
+		}
+		return hs.toArray(new HuespedDTO[0]);
+	}
+
 	public HabitacionDTO map(Hotel hotel, Habitacion habitacion)
 	{
 		return new HabitacionDTO(hotel.getNombre(), habitacion.getTipoHabitacion().getNombre(), habitacion.getNombre());
