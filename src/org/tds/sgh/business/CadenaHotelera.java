@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class CadenaHotelera
 {
-	// --------------------------------------------------------------------------------------------
+	// atributos
 	
 	private Map<String, Cliente> clientes;
 	
@@ -28,6 +28,7 @@ public class CadenaHotelera
 	
 	
 	// --------------------------------------------------------------------------------------------
+	// Constructor
 	
 	public CadenaHotelera(String nombre)
 	{
@@ -45,7 +46,7 @@ public class CadenaHotelera
 		this.tipoHabitacionList = new ArrayList<TipoHabitacion>();
 	}
 	
-	// --------------------------------------------------------------------------------------------
+	// metodos
 	
 	public Cliente agregarCliente(
 		String rut,
