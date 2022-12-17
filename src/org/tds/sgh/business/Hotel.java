@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.tds.sgh.infrastructure.Infrastructure;
+
 
 public class Hotel
 {
@@ -69,7 +71,7 @@ public class Hotel
 	}
 	
 	public boolean enPais(String pais) {
-		return this.pais == pais;
+		return this.pais.equals(pais) ;
 	}
 	
 	public boolean confirmarDisponibilidad(String nombreTipoHabitacion, GregorianCalendar fechaInicio, GregorianCalendar fechaFin) {
@@ -85,7 +87,7 @@ public class Hotel
 		}
 		int CantidadReservas =0;
 		for( Reserva r : this.reservas) {
-			if (r.coincide(nombreTipoHabitacion,fechaInicio,fechaFin)) {
+			if (!r.coincide(nombreTipoHabitacion,fechaInicio,fechaFin)) {
 				CantidadReservas++;
 			}
 		}
@@ -99,6 +101,7 @@ public class Hotel
 		
 
 		this.reservas.add(reserva);
+		Infrastructure.getInstance().getSistemaMensajeria().enviarMail(cliente.getMail(), "Reserva confirmada", "welcome");
 		return reserva;
 	}
 	

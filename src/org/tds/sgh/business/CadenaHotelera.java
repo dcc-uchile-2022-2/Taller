@@ -169,16 +169,17 @@ public class CadenaHotelera
 	
 	// Implementación
 	
-	public void registrarCliente(String rut, String nombre, String direccion, String telefono, String mail) {
+	public Cliente registrarCliente(String rut, String nombre, String direccion, String telefono, String mail) {
 		Cliente cliente = new Cliente(rut, nombre, direccion, telefono, mail);
 		this.clientes.put(rut, cliente);
+		return cliente;
 	}
 	
 	public Set<Hotel> sugerirAlternativas(String pais, String nombreTipoHabitacion, GregorianCalendar fechaInicio, GregorianCalendar fechaFin) {
 		
 		Set<Hotel> hotelesConDisp = new HashSet<Hotel>();
 		
-		for (Hotel h: this.hotelesList) {
+		for (Hotel h: this.hoteles.values()) {
 			if (!h.enPais(pais)) {
 				continue ;
 			}
@@ -222,9 +223,9 @@ public class CadenaHotelera
 
 		Hotel h = this.hoteles.get(nombreHotel);
 		for (Reserva reserva : h.getReservas() ) {
-			if ( reserva.coincide(nombreTipoHabitacion, ff, fi) ) {
+			//if ( reserva.coincide(nombreTipoHabitacion, ff, fi) ) {
 				return reserva;
-			}			
+			//}			
 		}
 		return null;
 	}

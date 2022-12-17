@@ -22,7 +22,7 @@ public class SRController implements IHacerReservaController {
 	private CadenaHotelera ch;
 	private Cliente cliente;
 	private HashMap<String,Cliente> clienteMap;
-	private List<Cliente> clientes;
+	private Set<Cliente> clientes;
 	
 	public  SRController(CadenaHotelera ch){
 		this.ch = ch;
@@ -33,6 +33,7 @@ public class SRController implements IHacerReservaController {
 	public Set<ClienteDTO> buscarCliente(String patronNombreCliente) {
 		DTO dto = DTO.getInstance();		
 		Set<Cliente> clientes = this.ch.buscarClientes(patronNombreCliente);
+		this.clientes=clientes;
 		return dto.mapClientes(clientes);
 	}
 
@@ -41,7 +42,8 @@ public class SRController implements IHacerReservaController {
 	public ClienteDTO seleccionarCliente(String rut) throws Exception {
 		DTO dto = DTO.getInstance();		
 
-		Cliente cliente = this.ch.buscarCliente(rut);
+		Cliente cliente = this.ch.buscarClientePorRut(rut);
+		this.cliente = cliente;
 		return dto.map(cliente);
 	}
 
@@ -49,7 +51,10 @@ public class SRController implements IHacerReservaController {
 	@Override
 	public ClienteDTO registrarCliente(String rut, String nombre, String direccion, String telefono, String mail) 
 			throws Exception {
-		return 	this.registrarCliente(rut, nombre, direccion, telefono, mail);
+		DTO dto = DTO.getInstance();		
+		Cliente cliente = this.ch.registrarCliente(rut, nombre, direccion, telefono, mail);
+		this.cliente=cliente;
+		return dto.map(cliente);
 	}
 
 

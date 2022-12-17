@@ -60,7 +60,7 @@ public class DTO
 				reserva.getFechaFin(),
 				reserva.getModificablePorHuesped(),
 				reserva.getTipoReserva().toString(),
-				"", 
+				reserva.getHabitacion()==null?null:reserva.getHabitacion().getNombre(), 
 				this.mapHuespedes(reserva.getHuespedes()) );
 	}
 	
