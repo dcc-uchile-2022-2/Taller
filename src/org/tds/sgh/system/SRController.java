@@ -11,18 +11,20 @@ import org.tds.sgh.business.CadenaHotelera;
 import org.tds.sgh.business.Cliente;
 import org.tds.sgh.business.Habitacion;
 import org.tds.sgh.business.Hotel;
+import org.tds.sgh.business.Reserva;
 import org.tds.sgh.dtos.ClienteDTO;
 import org.tds.sgh.dtos.DTO;
 import org.tds.sgh.dtos.HotelDTO;
 import org.tds.sgh.dtos.ReservaDTO;
 import org.tds.sgh.infrastructure.Infrastructure;
 
-public class SRController implements IHacerReservaController {
+public class SRController implements IHacerReservaController, ITomarReservaController {
 	
 	private CadenaHotelera ch;
 	private Cliente cliente;
 	private HashMap<String,Cliente> clienteMap;
 	private Set<Cliente> clientes;
+	private Reserva reserva;
 	
 	public  SRController(CadenaHotelera ch){
 		this.ch = ch;
@@ -69,8 +71,10 @@ public class SRController implements IHacerReservaController {
 	@Override
 	public ReservaDTO registrarReserva(String nombreHotel, String nombreTipoHabitacion, GregorianCalendar fechaInicio,
 			GregorianCalendar fechaFin, boolean modificablePorHuesped) throws Exception {
-		DTO dto = DTO.getInstance();				
-		return  dto.map(this.ch.registrarReserva(this.cliente,nombreHotel, nombreTipoHabitacion, fechaInicio, fechaFin,modificablePorHuesped));
+		DTO dto = DTO.getInstance();	
+		Reserva r= this.ch.registrarReserva(this.cliente,nombreHotel, nombreTipoHabitacion, fechaInicio, fechaFin,modificablePorHuesped);
+		this.reserva = r ;
+		return  dto.map(r);
 
 	}
 
@@ -83,5 +87,69 @@ public class SRController implements IHacerReservaController {
 		return dto.mapHoteles(hoteles);
 
 	}
+
+
+	@Override
+	public Set<ReservaDTO> buscarReservasDelCliente() throws Exception {
+		DTO dto = DTO.getInstance();		
+		Set<Reserva> rs = this.ch.buscarReservasDelCliente(this.cliente);
+		
+		return dto.mapReservas(rs);
+	
+	}
+
+
+	@Override
+	public ReservaDTO modificarReserva(String nombreHotel, String nombreTipoHabitacion, GregorianCalendar fechaInicio,
+			GregorianCalendar fechaFin, boolean modificablePorHuesped) throws Exception {
+		DTO dto = DTO.getInstance();		
+		Reserva r = this.ch.modificarReserva(nombreHotel, nombreTipoHabitacion, fechaFin, fechaFin, modificablePorHuesped);
+		this.reserva = r;
+		return dto.map(r);
+	}
+
+
+	@Override
+	public Set<ReservaDTO> buscarReservasPendientes(String nombreHotel) throws Exception {
+		DTO dto = DTO.getInstance();		
+		Set<Reserva>  rs = this.ch.buscarReservasPendientes(nombreHotel);
+		return dto.mapReservas(rs);
+	}
+
+
+	@Override
+	public ReservaDTO seleccionarReserva(long codigoReserva) throws Exception {
+		DTO dto = DTO.getInstance();
+		Reserva r = this.ch.BuscarReservasPorCodigo(codigoReserva);
+		this.reserva = r;
+		return dto.map(r);
+	}
+
+
+	@Override
+	public ReservaDTO registrarHuesped(String nombre, String documento) throws Exception {
+		DTO dto = DTO.getInstance();
+
+		this.reserva = this.ch.registrarHuesped(this.reserva,nombre,documento);
+		
+		return dto.map(this.reserva);
+	}
+
+
+	@Override
+	public ReservaDTO tomarReserva() throws Exception {
+		DTO dto = DTO.getInstance();
+
+		this.reserva.TomarReserva();
+		
+		
+		Infrastructure.getInstance().getSistemaFacturacion().iniciarEstadia(dto.map(reserva));
+		return dto.map(reserva);
+	}
+
+	
+
+	
+	
 
 }

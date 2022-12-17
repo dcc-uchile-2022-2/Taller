@@ -101,6 +101,7 @@ public class Hotel
 		
 
 		this.reservas.add(reserva);
+		
 		Infrastructure.getInstance().getSistemaMensajeria().enviarMail(cliente.getMail(), "Reserva confirmada", "welcome");
 		return reserva;
 	}
@@ -114,8 +115,30 @@ public class Hotel
 		}
 		return reservasHotelCliente;
 	}
+	
+	
 
-	public Reserva[] getReservas() {
-		return this.getReservas();
+	public Set<Reserva> getReservas() {
+		return this.reservas;
+	}
+	
+	public Reserva BuscarReservaPorCodigo(long codigo) {
+		for (Reserva r :  this.reservas) {
+			if (r.getCodigo()==codigo) {
+				return r;
+			}
+		}
+		return null;
+	}
+	
+	public void BuscarHabitacionDisponible(Reserva r) {
+		
+		
+		for( Habitacion h : this.habitaciones.values()) {
+			if (h.getTipoHabitacion().getNombre().equals(r.getTipoHabitacion().getNombre())) {
+				r.SetHabitacion(h);
+			}	
+		}
+		
 	}
 }

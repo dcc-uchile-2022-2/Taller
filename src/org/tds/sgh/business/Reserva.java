@@ -113,9 +113,22 @@ public class Reserva {
 	}
 
 
+	public void TomarReserva(){
+		this.hotel.BuscarHabitacionDisponible(this);
+		this.estado= EstadoReserva.Tomada;
+		Infrastructure.getInstance().getSistemaMensajeria().enviarMail(this.cliente.getMail(), "Tomada", "Ingresaste ql");
+		
+	}
 
 	public TipoHabitacion getTipoHabitacion() {
 		return this.tipoHabitacion;
 	}
+	
+	public void SetHabitacion(Habitacion habitacion) {
+		this.habitacion= habitacion;
+	}
+
+
+
 	
 }
