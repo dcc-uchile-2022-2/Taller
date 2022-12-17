@@ -11,7 +11,7 @@ import java.util.GregorianCalendar;
 
 public class CadenaHotelera
 {
-	// --------------------------------------------------------------------------------------------
+	// atributos
 	
 	private Map<String, Cliente> clientes;
 	
@@ -29,6 +29,7 @@ public class CadenaHotelera
 	
 	
 	// --------------------------------------------------------------------------------------------
+	// Constructor
 	
 	public CadenaHotelera(String nombre)
 	{
@@ -46,7 +47,7 @@ public class CadenaHotelera
 		this.tipoHabitacionList = new ArrayList<TipoHabitacion>();
 	}
 	
-	// --------------------------------------------------------------------------------------------
+	// metodos
 	
 	public Cliente agregarCliente(
 		String rut,
@@ -192,8 +193,7 @@ public class CadenaHotelera
 	
 	public boolean confirmarDisponibilidad(String nombreHotel, String nombreTipoHabitacion, GregorianCalendar fechaInicio, GregorianCalendar fechaFin) {
 		Hotel hotel = this.hoteles.get(nombreHotel);
-		boolean disp = hotel.confirmarDisponibilidad(nombreTipoHabitacion, fechaInicio, fechaFin);
-		return disp;
+		return  hotel.confirmarDisponibilidad(nombreTipoHabitacion, fechaInicio, fechaFin);;
 	}
 	
 	public Reserva registrarReserva(String nombreHotel, String nombreTipoHabitacion, Cliente cliente, GregorianCalendar fechaInicio, GregorianCalendar fechaFin, boolean modificablePorHuesped) {
@@ -201,6 +201,7 @@ public class CadenaHotelera
 		TipoHabitacion th = this.tiposHabitacion.get(nombreTipoHabitacion);
 		Reserva r = h.crearReserva(th, cliente, fechaInicio, fechaFin, modificablePorHuesped);
 		return r;
+
 	}
 	
 	public List<Reserva> buscarReservasDelCliente(Cliente cliente) {
