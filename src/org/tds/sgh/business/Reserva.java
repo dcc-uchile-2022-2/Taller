@@ -14,11 +14,8 @@ public class Reserva {
 	private GregorianCalendar fechaFin;
 	private boolean modificablePorHuesped;
 	private EstadoReserva estado;		
-<<<<<<< HEAD
 
-=======
 
->>>>>>> origin/AlejandroCortes
 	public Reserva(Cliente cliente, int codigo, GregorianCalendar fechaInicio, GregorianCalendar fechaFin, boolean modificablePorHuesped, EstadoReserva estado) {
 		// TODO Auto-generated constructor stub
 		this.cliente = cliente;
@@ -28,11 +25,8 @@ public class Reserva {
 		this.modificablePorHuesped = modificablePorHuesped;
 		this.estado=estado;				 
 	}	
-<<<<<<< HEAD
 	
-	public Reserva create(String tipoHabitacion, Cliente cliente, Date fechaInicio, Date fechaFin, boolean modificablePorHuesped) {
 
-	}
 	
 	public boolean coincide(String nombreTipoHabitacion, Date fechaInicio, Date fechaFin) {
 		
@@ -69,7 +63,6 @@ public class Reserva {
 	
 
 }
-=======
 
 	public Reserva create(String tipoHabitacion, Cliente cliente, Date fechaInicio, Date fechaFin, boolean modificablePorHuesped) {
 			return null;
@@ -117,4 +110,3 @@ public class Reserva {
 
 
 }
->>>>>>> origin/AlejandroCortes
