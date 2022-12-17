@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.GregorianCalendar;
 
 
 public class CadenaHotelera
@@ -172,7 +173,7 @@ public class CadenaHotelera
 		this.clientes.put(rut, cliente);
 	}
 	
-	public List<Hotel> sugerirAlternativas(String pais, String nombreTipoHabitacion, String fechaInicio, String fechaFin) {
+	public List<Hotel> sugerirAlternativas(String pais, String nombreTipoHabitacion, GregorianCalendar fechaInicio, GregorianCalendar fechaFin) {
 		
 		List<Hotel> hotelesConDisp = new ArrayList<Hotel>();
 		
@@ -189,13 +190,13 @@ public class CadenaHotelera
 		return hotelesConDisp;
 	}
 	
-	public boolean confirmarDisponibilidad(String nombreHotel, String nombreTipoHabitacion, String fechaInicio, String fechaFin) {
+	public boolean confirmarDisponibilidad(String nombreHotel, String nombreTipoHabitacion, GregorianCalendar fechaInicio, GregorianCalendar fechaFin) {
 		Hotel hotel = this.hoteles.get(nombreHotel);
 		boolean disp = hotel.confirmarDisponibilidad(nombreTipoHabitacion, fechaInicio, fechaFin);
 		return disp;
 	}
 	
-	public Reserva registrarReserva(String nombreHotel, String nombreTipoHabitacion, Cliente cliente, String fechaInicio, String fechaFin, boolean modificablePorHuesped) {
+	public Reserva registrarReserva(String nombreHotel, String nombreTipoHabitacion, Cliente cliente, GregorianCalendar fechaInicio, GregorianCalendar fechaFin, boolean modificablePorHuesped) {
 		Hotel h = this.hoteles.get(nombreHotel);
 		TipoHabitacion th = this.tiposHabitacion.get(nombreTipoHabitacion);
 		Reserva r = h.crearReserva(th, cliente, fechaInicio, fechaFin, modificablePorHuesped);
@@ -215,7 +216,7 @@ public class CadenaHotelera
 		return this.buscarCliente(rut);
 	}
 
-	public Reserva modificarReserva(String nh, String nth, String fi, String ff, boolean mph) {
+	public Reserva modificarReserva(String nh, String nth, GregorianCalendar fi, GregorianCalendar ff, boolean mph) {
 		Hotel h = this.hoteles.get(nh);
 		TipoHabitacion th = this.tiposHabitacion.get(nth);
 		Reserva r = h.crearReserva(th, this.cliente, fi, ff, mph);
