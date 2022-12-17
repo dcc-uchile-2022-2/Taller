@@ -35,8 +35,9 @@ public class ControllerFactory implements IControllerFactory
 	@Override
 	public IHacerReservaController createHacerReservaController()
 	{
+		return new SRController(this.cadenaHotelera);
 		// TODO
-		throw new NotImplementedException();
+		//throw new NotImplementedException();
 	}
 	
 	@Override
@@ -52,4 +53,6 @@ public class ControllerFactory implements IControllerFactory
 		// TODO
 		throw new NotImplementedException();
 	}
+	
+	
 }
