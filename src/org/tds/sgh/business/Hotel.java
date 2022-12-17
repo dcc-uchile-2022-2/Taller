@@ -114,8 +114,19 @@ public class Hotel
 		}
 		return reservasHotelCliente;
 	}
+	
+	
 
 	public Reserva[] getReservas() {
 		return this.getReservas();
+	}
+	
+	public Reserva BuscarReservaPorCodigo(long codigo) {
+		for (Reserva r :  this.reservas) {
+			if (r.getCodigo()==codigo) {
+				return r;
+			}
+		}
+		return null;
 	}
 }

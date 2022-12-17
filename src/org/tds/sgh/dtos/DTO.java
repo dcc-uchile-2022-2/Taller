@@ -51,6 +51,22 @@ public class DTO
 	
 	public ReservaDTO map(Reserva reserva)
 	{		
+		return  this.mapReserva(reserva);
+	}
+	
+	public Set<ReservaDTO> map(Set<Reserva> reservas)
+	{		
+		Set<ReservaDTO> rss = new HashSet<ReservaDTO>;
+		for( Reserva r: reservas) {
+			rss.add(this.mapReserva(r));
+		}
+		return rss;
+				
+	}
+	
+	
+	public ReservaDTO mapReserva(Reserva reserva)
+	{		
 		long num = reserva.getCodigo();	
 		return new ReservaDTO(num,
 				reserva.getCliente().getRut(),

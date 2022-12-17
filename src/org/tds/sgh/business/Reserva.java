@@ -113,6 +113,9 @@ public class Reserva {
 	}
 
 
+	public void TomarReserva(){
+		this.estado= EstadoReserva.Tomada;
+	}
 
 	public TipoHabitacion getTipoHabitacion() {
 		return this.tipoHabitacion;

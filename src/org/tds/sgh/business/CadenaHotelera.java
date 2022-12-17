@@ -214,6 +214,18 @@ public class CadenaHotelera
 		}
 		return rs;
 	}
+	
+	public Set<Reserva> buscarReservasPendientes(String hotel) {
+		Hotel h = this.hoteles.get(hotel);
+		
+		Set<Reserva> reservas = new HashSet<Reserva>();
+		for (Reserva reserva : h.getReservas() ) {
+			if (reserva.estado().equals(EstadoReserva.Pendiente )){
+				reservas.add(reserva);
+			}
+		}
+		return reservas;
+	}
 
 	public Cliente buscarClientePorRut(String rut) throws Exception {
 		return this.buscarCliente(rut);
@@ -229,6 +241,26 @@ public class CadenaHotelera
 		}
 		return null;
 	}
+	
+	public Reserva BuscarReservasPorCodigo(long codigo){
+		
+		Reserva r= null;
+		for (Hotel h: this.hotelesList) {
+			r = h.BuscarReservaPorCodigo(codigo);
+			if (r!=null) {
+				break;
+			}
+		}
+		return r;
+	
+	}
+
+	public Reserva registrarHuesped(Reserva reserva, String nombre, String documento) {
+		reserva.registrarHuesped(nombre, documento);
+		return reserva;
+		
+	}
+	
 	
 		
 }
