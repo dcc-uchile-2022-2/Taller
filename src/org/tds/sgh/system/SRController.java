@@ -10,6 +10,7 @@ import java.util.Set;
 import org.tds.sgh.business.CadenaHotelera;
 import org.tds.sgh.business.Cliente;
 import org.tds.sgh.business.Habitacion;
+import org.tds.sgh.business.Hotel;
 import org.tds.sgh.dtos.ClienteDTO;
 import org.tds.sgh.dtos.DTO;
 import org.tds.sgh.dtos.HotelDTO;
@@ -63,19 +64,19 @@ public class SRController implements IHacerReservaController {
 	@Override
 	public ReservaDTO registrarReserva(String nombreHotel, String nombreTipoHabitacion, GregorianCalendar fechaInicio,
 			GregorianCalendar fechaFin, boolean modificablePorHuesped) throws Exception {
+		
+		DTO dto = DTO.getInstance();		
+		return  this.ch.registrarReserva(this.cliente,nombreHotel, nombreTipoHabitacion, fechaInicio, fechaFin,modificablePorHuesped);
 
-		
-		
-		return this.ch.registrarReserva(this.cliente,nombreHotel, nombreTipoHabitacion, fechaInicio, fechaFin);
-;
 	}
 
 
 	@Override
 	public Set<HotelDTO> sugerirAlternativas(String pais, String nombreTipoHabitacion, GregorianCalendar fechaInicio,
 			GregorianCalendar fechaFin) throws Exception {
-		
-		return this.ch.sugerirAlternativas(pais, nombreTipoHabitacion, fechaInicio, fechaFin);
+		DTO dto = DTO.getInstance();		
+		Set<Hotel> hoteles =  this.ch.sugerirAlternativas(pais, nombreTipoHabitacion, fechaInicio, fechaFin);
+		return dto.mapHoteles(hoteles);
 
 	}
 

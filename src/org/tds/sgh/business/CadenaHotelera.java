@@ -174,9 +174,9 @@ public class CadenaHotelera
 		this.clientes.put(rut, cliente);
 	}
 	
-	public List<Hotel> sugerirAlternativas(String pais, String nombreTipoHabitacion, GregorianCalendar fechaInicio, GregorianCalendar fechaFin) {
+	public Set<Hotel> sugerirAlternativas(String pais, String nombreTipoHabitacion, GregorianCalendar fechaInicio, GregorianCalendar fechaFin) {
 		
-		List<Hotel> hotelesConDisp = new ArrayList<Hotel>();
+		Set<Hotel> hotelesConDisp = new HashSet<Hotel>();
 		
 		for (Hotel h: this.hotelesList) {
 			boolean mismoPais = h.enPais(pais);
@@ -196,7 +196,7 @@ public class CadenaHotelera
 		return  hotel.confirmarDisponibilidad(nombreTipoHabitacion, fechaInicio, fechaFin);;
 	}
 	
-	public Reserva registrarReserva(String nombreHotel, String nombreTipoHabitacion, Cliente cliente, GregorianCalendar fechaInicio, GregorianCalendar fechaFin, boolean modificablePorHuesped) {
+	public Reserva registrarReserva( Cliente cliente, String nombreHotel, String nombreTipoHabitacion, GregorianCalendar fechaInicio, GregorianCalendar fechaFin, boolean modificablePorHuesped) {
 		Hotel h = this.hoteles.get(nombreHotel);
 		TipoHabitacion th = this.tiposHabitacion.get(nombreTipoHabitacion);
 		Reserva r = h.crearReserva(th, cliente, fechaInicio, fechaFin, modificablePorHuesped);

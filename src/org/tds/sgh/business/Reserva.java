@@ -5,11 +5,14 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import org.tds.sgh.dtos.HuespedDTO;
+
 public class Reserva {
 	
 
+	
 	private Cliente cliente;
-	private int codigo;
+	private long codigo;
 	private GregorianCalendar fechaInicio;
 	private GregorianCalendar fechaFin;
 	private boolean modificablePorHuesped;
@@ -25,6 +28,8 @@ public class Reserva {
 		this.modificablePorHuesped = modificablePorHuesped;
 		this.estado=estado;				 
 	}	
+	
+	public ()
 	
 
 	

@@ -6,6 +6,7 @@ import java.util.Set;
 import org.tds.sgh.business.Cliente;
 import org.tds.sgh.business.Habitacion;
 import org.tds.sgh.business.Hotel;
+import org.tds.sgh.business.Reserva;
 import org.tds.sgh.business.TipoHabitacion;
 
 
@@ -44,6 +45,13 @@ public class DTO
 	{
 		return new HotelDTO(hotel.getNombre(), hotel.getPais());
 	}
+	
+	
+	public ReservaDTO map(Reserva reserva)
+	{
+		return new ReservaDTO();
+	}
+	
 	
 	public HabitacionDTO map(Hotel hotel, Habitacion habitacion)
 	{
