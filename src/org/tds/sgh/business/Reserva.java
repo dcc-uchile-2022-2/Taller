@@ -3,6 +3,7 @@ package org.tds.sgh.business;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 
 public class Reserva {
@@ -25,7 +26,7 @@ public class Reserva {
 		this.fechaInicio = fechaInicio;
 		this.fechaFin = fechaFin;
 		this.modificablePorHuesped = modificablePorHuesped;
-		this.estado=estado;				 
+		this.estado=estado;		
 	}	
 	
 
