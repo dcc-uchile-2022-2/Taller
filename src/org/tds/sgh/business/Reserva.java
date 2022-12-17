@@ -32,8 +32,14 @@ public class Reserva {
 	public ()
 	
 
+
+	public Reserva create(String tipoHabitacion, Cliente cliente, GregorianCalendar fechaInicio, GregorianCalendar fechaFin, boolean modificablePorHuesped) {
+		
+		//Hotel hotel = new Hotel()
+	}
+
 	
-	public boolean coincide(String nombreTipoHabitacion, Date fechaInicio, Date fechaFin) {
+	public boolean coincide(String nombreTipoHabitacion, GregorianCalendar fechaInicio, GregorianCalendar fechaFin) {
 		
 	}
 	
@@ -65,53 +71,26 @@ public class Reserva {
 		
 		
 	}
+
+	public Cliente getCliente() {
+		return this.cliente;
+	}
 	
-
-}
-
-	public Reserva create(String tipoHabitacion, Cliente cliente, Date fechaInicio, Date fechaFin, boolean modificablePorHuesped) {
-			return null;
+	public int getCodigo() {
+		return this.codigo;		
 	}
-
-	public boolean coincide(String nombreTipoHabitacion, Date fechaInicio, Date fechaFin) {
-		return false;
+	
+	public GregorianCalendar getFechaInicio() {
+		return this.fechaInicio;
 	}
-
-
-	public List<Reserva> add(Reserva reserva){
-
-		return null;
-
+	
+	public GregorianCalendar getFechaFin() {
+		return this.fechaFin;		
 	}
-
-	public boolean esDelCliente(Cliente cliente) {
-			
-		return false;
-		
+	
+	public EstadoReserva estado() {
+		return this.estado;
 	}
-
-	public List<Huesped> registrarHuesped(String nombre, String documento){
-
-		return null;
-	}
-
-	public String setEstado(String stado) {
-
-		return null;
-	}
-
-	public void iniciarEstadia() {
-
-		return;
-
-	}
-
-
-	public void iniciarFacturacion() {
-
-		return;
-
-	}
-
-
+	
+	
 }
