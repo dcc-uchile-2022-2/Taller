@@ -3,39 +3,36 @@ package org.tds.sgh.business;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
-
-import org.tds.sgh.dtos.HuespedDTO;
 
 public class Reserva {
 	
 
-	
-	private Cliente cliente;
-	private long codigo;
+	private Cliente cliente;	
+	private TipoHabitacion tipoHabitacion;
+	private Hotel hotel;
+	private Huesped huesped;
+	private int codigo;
 	private GregorianCalendar fechaInicio;
 	private GregorianCalendar fechaFin;
 	private boolean modificablePorHuesped;
 	private EstadoReserva estado;		
 
 
-	public Reserva(Cliente cliente, int codigo, GregorianCalendar fechaInicio, GregorianCalendar fechaFin, boolean modificablePorHuesped, EstadoReserva estado) {
-		// TODO Auto-generated constructor stub
+	public Reserva(Cliente cliente, int codigo, GregorianCalendar fechaInicio, GregorianCalendar fechaFin, boolean modificablePorHuesped, EstadoReserva estado) { 
 		this.cliente = cliente;
 		this.codigo = codigo;
 		this.fechaInicio = fechaInicio;
 		this.fechaFin = fechaFin;
 		this.modificablePorHuesped = modificablePorHuesped;
-		this.estado=estado;				 
+		this.estado=estado;		
 	}	
-	
-	public ()
 	
 
 
 	public Reserva create(String tipoHabitacion, Cliente cliente, GregorianCalendar fechaInicio, GregorianCalendar fechaFin, boolean modificablePorHuesped) {
-		
-		//Hotel hotel = new Hotel()
+		return hotel.crearReserva(tipoHabitacion, cliente, fechaInicio, fechaFin, modificablePorHuesped);		
 	}
 
 	
@@ -55,9 +52,13 @@ public class Reserva {
 	
 	public List<Huesped> registrarHuesped(String nombre, String documento){
 		
+		
+		
 	}
 	
 	public String setEstado(String stado) {
+		
+		
 		
 	}
 	

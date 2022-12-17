@@ -66,7 +66,8 @@ public class SRController implements IHacerReservaController {
 			GregorianCalendar fechaFin, boolean modificablePorHuesped) throws Exception {
 		
 		DTO dto = DTO.getInstance();		
-		return  this.ch.registrarReserva(this.cliente,nombreHotel, nombreTipoHabitacion, fechaInicio, fechaFin,modificablePorHuesped);
+		
+		return  dto.map(this.ch.registrarReserva(this.cliente,nombreHotel, nombreTipoHabitacion, fechaInicio, fechaFin,modificablePorHuesped));
 
 	}
 
