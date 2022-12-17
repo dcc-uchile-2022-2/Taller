@@ -191,15 +191,13 @@ public class CadenaHotelera
 	
 	public boolean confirmarDisponibilidad(String nombreHotel, String nombreTipoHabitacion, String fechaInicio, String fechaFin) {
 		Hotel hotel = this.hoteles.get(nombreHotel);
-		boolean disp = hotel.confirmarDisponibilidad(nombreTipoHabitacion, fechaInicio, fechaFin);
-		return disp;
+		return  hotel.confirmarDisponibilidad(nombreTipoHabitacion, fechaInicio, fechaFin);;
 	}
 	
-	public Reserva registrarReserva(String nombreHotel, String nombreTipoHabitacion, Cliente cliente, String fechaInicio, String fechaFin, boolean modificablePorHuesped) {
-		Hotel h = this.hoteles.get(nombreHotel);
-		TipoHabitacion th = this.tiposHabitacion.get(nombreTipoHabitacion);
-		Reserva r = h.crearReserva(th, cliente, fechaInicio, fechaFin, modificablePorHuesped);
-		return r;
+	public Reserva registrarReserva(Cliente cliente,String nombreHotel, String nombreTipoHabitacion , String fechaInicio, String fechaFin, boolean modificablePorHuesped) {
+		Hotel hotel = this.hoteles.get(nombreHotel);
+		TipoHabitacion tipoHabitacion = this.tiposHabitacion.get(nombreTipoHabitacion);
+		return hotel.crearReserva(tipoHabitacion, cliente, fechaInicio, fechaFin, modificablePorHuesped);
 	}
 	
 	public List<Reserva> buscarReservasDelCliente(Cliente cliente) {
