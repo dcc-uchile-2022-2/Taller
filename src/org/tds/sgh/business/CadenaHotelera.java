@@ -208,7 +208,7 @@ public class CadenaHotelera
 	
 	public Set<Reserva> buscarReservasDelCliente(Cliente cliente) {
 		Set<Reserva> rs = new HashSet<Reserva>();
-		for (Hotel h: this.hotelesList) {
+		for (Hotel h: this.hoteles.values()) {
 			Set<Reserva> resHotelCliente = h.buscarReservasCliente(cliente);
 			rs.addAll(resHotelCliente);
 		}
@@ -245,7 +245,7 @@ public class CadenaHotelera
 	public Reserva BuscarReservasPorCodigo(long codigo){
 		
 		Reserva r= null;
-		for (Hotel h: this.hotelesList) {
+		for (Hotel h: this.hoteles.values()) {
 			r = h.BuscarReservaPorCodigo(codigo);
 			if (r!=null) {
 				break;

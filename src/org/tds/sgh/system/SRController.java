@@ -71,8 +71,10 @@ public class SRController implements IHacerReservaController, ITomarReservaContr
 	@Override
 	public ReservaDTO registrarReserva(String nombreHotel, String nombreTipoHabitacion, GregorianCalendar fechaInicio,
 			GregorianCalendar fechaFin, boolean modificablePorHuesped) throws Exception {
-		DTO dto = DTO.getInstance();				
-		return  dto.map(this.ch.registrarReserva(this.cliente,nombreHotel, nombreTipoHabitacion, fechaInicio, fechaFin,modificablePorHuesped));
+		DTO dto = DTO.getInstance();	
+		Reserva r= this.ch.registrarReserva(this.cliente,nombreHotel, nombreTipoHabitacion, fechaInicio, fechaFin,modificablePorHuesped);
+		this.reserva = r ;
+		return  dto.map(r);
 
 	}
 
@@ -90,8 +92,9 @@ public class SRController implements IHacerReservaController, ITomarReservaContr
 	@Override
 	public Set<ReservaDTO> buscarReservasDelCliente() throws Exception {
 		DTO dto = DTO.getInstance();		
-		Set<Reserva> rs = this.ch.buscarReservasDelCliente(cliente);
-		return dto.map(rs);
+		Set<Reserva> rs = this.ch.buscarReservasDelCliente(this.cliente);
+		
+		return dto.mapReservas(rs);
 	
 	}
 
@@ -101,6 +104,7 @@ public class SRController implements IHacerReservaController, ITomarReservaContr
 			GregorianCalendar fechaFin, boolean modificablePorHuesped) throws Exception {
 		DTO dto = DTO.getInstance();		
 		Reserva r = this.ch.modificarReserva(nombreHotel, nombreTipoHabitacion, fechaFin, fechaFin, modificablePorHuesped);
+		this.reserva = r;
 		return dto.map(r);
 	}
 
@@ -109,7 +113,7 @@ public class SRController implements IHacerReservaController, ITomarReservaContr
 	public Set<ReservaDTO> buscarReservasPendientes(String nombreHotel) throws Exception {
 		DTO dto = DTO.getInstance();		
 		Set<Reserva>  rs = this.ch.buscarReservasPendientes(nombreHotel);
-		return dto.map(rs);
+		return dto.mapReservas(rs);
 	}
 
 
@@ -138,6 +142,8 @@ public class SRController implements IHacerReservaController, ITomarReservaContr
 
 		this.reserva.TomarReserva();
 		
+		
+		Infrastructure.getInstance().getSistemaFacturacion().iniciarEstadia(dto.map(reserva));
 		return dto.map(reserva);
 	}
 

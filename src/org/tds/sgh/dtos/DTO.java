@@ -54,16 +54,15 @@ public class DTO
 		return  this.mapReserva(reserva);
 	}
 	
-	public Set<ReservaDTO> map(Set<Reserva> reservas)
+	public Set<ReservaDTO> mapReservas(Set<Reserva> reservas)
 	{		
-		Set<ReservaDTO> rss = new HashSet<ReservaDTO>;
+		Set<ReservaDTO> rss = new HashSet<ReservaDTO>();
 		for( Reserva r: reservas) {
 			rss.add(this.mapReserva(r));
 		}
 		return rss;
 				
 	}
-	
 	
 	public ReservaDTO mapReserva(Reserva reserva)
 	{		
@@ -75,7 +74,7 @@ public class DTO
 				reserva.getFechaInicio(),
 				reserva.getFechaFin(),
 				reserva.getModificablePorHuesped(),
-				reserva.getTipoReserva().toString(),
+				reserva.getTipoReserva(),
 				reserva.getHabitacion()==null?null:reserva.getHabitacion().getNombre(), 
 				this.mapHuespedes(reserva.getHuespedes()) );
 	}

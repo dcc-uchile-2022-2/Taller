@@ -51,7 +51,7 @@ public class ControllerFactory implements IControllerFactory
 	public ITomarReservaController createTomarReservaController()
 	{
 		// TODO
-		throw new NotImplementedException();
+		return new SRController(this.cadenaHotelera);
 	}
 	
 	
