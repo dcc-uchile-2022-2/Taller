@@ -1,7 +1,9 @@
 package org.tds.sgh.business;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -18,6 +20,13 @@ public class CadenaHotelera
 	
 	private Map<String, TipoHabitacion> tiposHabitacion;
 	
+	// Implementation
+	private List<Hotel> hotelesList;
+	private List<Cliente> clientesList;
+	private List<Reserva> reservasList;
+	private List<TipoHabitacion> tipoHabitacionList;
+	
+	
 	// --------------------------------------------------------------------------------------------
 	
 	public CadenaHotelera(String nombre)
@@ -29,6 +38,11 @@ public class CadenaHotelera
 		this.nombre = nombre;
 		
 		this.tiposHabitacion = new HashMap<String, TipoHabitacion>();
+		
+		this.hotelesList = new ArrayList<Hotel>();
+		this.clientesList = new ArrayList<Cliente>();
+		this.reservasList = new ArrayList<Reserva>();
+		this.tipoHabitacionList = new ArrayList<TipoHabitacion>();
 	}
 	
 	// --------------------------------------------------------------------------------------------
@@ -150,4 +164,63 @@ public class CadenaHotelera
 	{
 		return new HashSet<TipoHabitacion>(this.tiposHabitacion.values());
 	}
+	
+	// Implementación
+	
+	public void registrarCliente(String rut, String nombre, String direccion, String telefono, String mail) {
+		Cliente cliente = new Cliente(rut, nombre, direccion, telefono, mail);
+		this.clientes.put(rut, cliente);
+	}
+	
+	public List<Hotel> sugerirAlternativas(String pais, String nombreTipoHabitacion, String fechaInicio, String fechaFin) {
+		
+		List<Hotel> hotelesConDisp = new ArrayList<Hotel>();
+		
+		for (Hotel h: this.hotelesList) {
+			boolean mismoPais = h.enPais(pais);
+			if (mismoPais) {
+				boolean disp = h.confirmarDisponibilidad(nombreTipoHabitacion, fechaInicio, fechaFin);
+				if (disp) {
+					hotelesConDisp.add(h);
+				}
+			}
+		}
+		
+		return hotelesConDisp;
+	}
+	
+	public boolean confirmarDisponibilidad(String nombreHotel, String nombreTipoHabitacion, String fechaInicio, String fechaFin) {
+		Hotel hotel = this.hoteles.get(nombreHotel);
+		boolean disp = hotel.confirmarDisponibilidad(nombreTipoHabitacion, fechaInicio, fechaFin);
+		return disp;
+	}
+	
+	public Reserva registrarReserva(String nombreHotel, String nombreTipoHabitacion, Cliente cliente, String fechaInicio, String fechaFin, boolean modificablePorHuesped) {
+		Hotel h = this.hoteles.get(nombreHotel);
+		TipoHabitacion th = this.tiposHabitacion.get(nombreTipoHabitacion);
+		Reserva r = h.crearReserva(th, cliente, fechaInicio, fechaFin, modificablePorHuesped);
+		return r;
+	}
+	
+	public List<Reserva> buscarReservasDelCliente(Cliente cliente) {
+		List<Reserva> rs = new ArrayList<Reserva>();
+		for (Hotel h: this.hotelesList) {
+			Reserva resHotelCliente = h.buscarReservasCliente(cliente);
+			rs.add(resHotelCliente);
+		}
+		return rs;
+	}
+
+	public Cliente buscarClientePorRut(String rut) {
+		return this.buscarCliente(rut);
+	}
+
+	public Reserva modificarReserva(String nh, String nth, String fi, String ff, boolean mph) {
+		Hotel h = this.hoteles.get(nh);
+		TipoHabitacion th = this.tiposHabitacion.get(nth);
+		Reserva r = h.crearReserva(th, this.cliente, fi, ff, mph);
+		return r;
+	}
+	
+		
 }
