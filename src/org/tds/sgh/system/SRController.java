@@ -64,9 +64,7 @@ public class SRController implements IHacerReservaController {
 	@Override
 	public ReservaDTO registrarReserva(String nombreHotel, String nombreTipoHabitacion, GregorianCalendar fechaInicio,
 			GregorianCalendar fechaFin, boolean modificablePorHuesped) throws Exception {
-		
-		DTO dto = DTO.getInstance();		
-		
+		DTO dto = DTO.getInstance();				
 		return  dto.map(this.ch.registrarReserva(this.cliente,nombreHotel, nombreTipoHabitacion, fechaInicio, fechaFin,modificablePorHuesped));
 
 	}

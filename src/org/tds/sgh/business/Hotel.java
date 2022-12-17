@@ -1,7 +1,10 @@
 package org.tds.sgh.business;
 
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -10,21 +13,27 @@ public class Hotel
 {
 	// --------------------------------------------------------------------------------------------
 	
-	private Map<String, Habitacion> habitaciones;
+	 
+	private Map<String, Habitacion> habitaciones  = new HashMap<String, Habitacion>();
+	
 	
 	private String nombre;
 	
 	private String pais;
 	
+	private Map<String,TipoHabitacion> TiposHabitaciones =  new HashMap<String, TipoHabitacion>(); 
+	private Set<Reserva> reservas  = new HashSet<Reserva>(); 
+
+
+	
 	// --------------------------------------------------------------------------------------------
 	
 	public Hotel(String nombre, String pais)
 	{
-		this.habitaciones = new HashMap<String, Habitacion>();
-		
-		this.nombre = nombre;
-		
+
+		this.nombre = nombre;		
 		this.pais = pais;
+	
 	}
 	
 	// --------------------------------------------------------------------------------------------
@@ -43,6 +52,7 @@ public class Hotel
 		return habitacion;
 	}
 	
+
 	public String getNombre()
 	{
 		return this.nombre;
@@ -58,5 +68,51 @@ public class Hotel
 		return new HashSet<Habitacion>(this.habitaciones.values());
 	}
 	
+	public boolean enPais(String pais) {
+		return this.pais == pais;
+	}
 	
+	public boolean confirmarDisponibilidad(String nombreTipoHabitacion, GregorianCalendar fechaInicio, GregorianCalendar fechaFin) {
+		
+		int CantidadHabitaciones = 0;
+		for( Habitacion h : this.habitaciones.values()) {
+			if (h.getTipoHabitacion().getNombre().equals(nombreTipoHabitacion)) {
+				CantidadHabitaciones++;
+			}	
+		}
+		if (CantidadHabitaciones == 0) {
+			return false;
+		}
+		int CantidadReservas =0;
+		for( Reserva r : this.reservas) {
+			if (r.coincide(nombreTipoHabitacion,fechaInicio,fechaFin)) {
+				CantidadReservas++;
+			}
+		}
+		return CantidadReservas<CantidadHabitaciones;
+	}
+	
+	public Reserva crearReserva(TipoHabitacion nombreTipoHabitacion, Cliente cliente, GregorianCalendar fechaInicio, GregorianCalendar fechaFin,
+			boolean mph)  {
+	
+		Reserva reserva = new Reserva(this, cliente,nombreTipoHabitacion, fechaInicio, fechaFin, mph);
+		
+
+		this.reservas.add(reserva);
+		return reserva;
+	}
+	
+	public Set<Reserva> buscarReservasCliente(Cliente c) {
+		Set<Reserva> reservasHotelCliente = new HashSet<Reserva>();
+		for ( Reserva reserva : this.reservas) {
+			if (reserva.esDelCliente(c)) {
+				reservasHotelCliente.add(reserva);
+			}
+		}
+		return reservasHotelCliente;
+	}
+
+	public Reserva[] getReservas() {
+		return this.getReservas();
+	}
 }

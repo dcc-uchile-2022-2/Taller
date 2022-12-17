@@ -54,13 +54,13 @@ public class DTO
 		long num = reserva.getCodigo();	
 		return new ReservaDTO(num,
 				reserva.getCliente().getRut(),
-				"Hotel transilvania",
-				"Tipo Reserva",
+				reserva.getHotel().getNombre(),
+				reserva.getTipoHabitacion().getNombre(),
 				reserva.getFechaInicio(),
 				reserva.getFechaFin(),
-				false,
-				"estado ",
-				"Habitacion ", 
+				reserva.getModificablePorHuesped(),
+				reserva.getTipoReserva().toString(),
+				"", 
 				this.mapHuespedes(reserva.getHuespedes()) );
 	}
 	
