@@ -25,7 +25,7 @@ public class Reserva {
 	private GregorianCalendar fechaFin;
 	private boolean modificablePorHuesped;
 	private EstadoReserva estado;		
-	
+	private Habitacion habitacion;
 	private Set<Huesped> huespedes;
     
 	private static AtomicLong CodigoDisponible = new AtomicLong(0);
@@ -54,6 +54,9 @@ public class Reserva {
 				cal.esPosterior(this.fechaFin, fechaInicio) );
 		
 				
+	}
+	public Habitacion getHabitacion(){
+		return this.habitacion;
 	}
 	
 	public Hotel getHotel() {
