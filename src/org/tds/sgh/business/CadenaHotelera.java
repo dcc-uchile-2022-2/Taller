@@ -235,13 +235,13 @@ public class CadenaHotelera
 
 		Hotel h = this.hoteles.get(nombreHotel);
 		for (Reserva reserva : h.getReservas() ) {
-			//if ( reserva.coincide(nombreTipoHabitacion, ff, fi) ) {
-				return reserva;
-			//}			
+			if ( reserva.coincide(nombreTipoHabitacion, ff, fi) ) {																	
+				h.crearReserva(this.tiposHabitacion.get(nombreTipoHabitacion), reserva.getCliente(), ff, fi, mph);
+			}			
 		}
 		return null;
 	}
-	
+	 
 	public Reserva BuscarReservasPorCodigo(long codigo){
 		
 		Reserva r= null;
@@ -260,7 +260,6 @@ public class CadenaHotelera
 		return reserva;
 		
 	}
-	
 	
 		
 }

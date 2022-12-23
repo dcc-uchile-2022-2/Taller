@@ -146,6 +146,13 @@ public class SRController implements IHacerReservaController, ITomarReservaContr
 		Infrastructure.getInstance().getSistemaFacturacion().iniciarEstadia(dto.map(reserva));
 		return dto.map(reserva);
 	}
+	
+	
+	public ReservaDTO modificarReserva() throws Exception{
+		DTO dto = DTO.getInstance();
+		this.reserva.ModificarReserva();
+		return dto.map(reserva);
+	}
 
 	
 
