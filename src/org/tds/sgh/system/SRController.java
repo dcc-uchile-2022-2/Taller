@@ -35,6 +35,7 @@ public class SRController implements IHacerReservaController, ITomarReservaContr
 
 	@Override
 	public Set<ClienteDTO> buscarCliente(String patronNombreCliente) {
+		
 		DTO dto = DTO.getInstance();		
 		Set<Cliente> clientes = this.ch.buscarClientes(patronNombreCliente);
 		this.clientes=clientes;
@@ -97,6 +98,17 @@ public class SRController implements IHacerReservaController, ITomarReservaContr
 	@Override
 	public Set<HotelDTO> sugerirAlternativas(String pais, String nombreTipoHabitacion, GregorianCalendar fechaInicio,
 			GregorianCalendar fechaFin) throws Exception {
+		
+		ICalendario cal = Infrastructure.getInstance().getCalendario();
+		
+		if (cal.esPasada(fechaInicio)) {
+			throw new Exception();
+		}
+		
+		if (cal.esPosterior(fechaInicio, fechaFin)) {
+			throw new Exception();
+		}
+		
 		DTO dto = DTO.getInstance();		
 		Set<Hotel> hoteles =  this.ch.sugerirAlternativas(pais, nombreTipoHabitacion, fechaInicio, fechaFin);
 		return dto.mapHoteles(hoteles);
@@ -106,6 +118,11 @@ public class SRController implements IHacerReservaController, ITomarReservaContr
 
 	@Override
 	public Set<ReservaDTO> buscarReservasDelCliente() throws Exception {
+		
+		if (this.cliente == null) {
+			throw new Exception();
+		}
+		
 		DTO dto = DTO.getInstance();		
 		Set<Reserva> rs = this.ch.buscarReservasDelCliente(this.cliente);
 		
@@ -117,6 +134,11 @@ public class SRController implements IHacerReservaController, ITomarReservaContr
 	@Override
 	public ReservaDTO modificarReserva(String nombreHotel, String nombreTipoHabitacion, GregorianCalendar fechaInicio,
 			GregorianCalendar fechaFin, boolean modificablePorHuesped) throws Exception {
+		
+		if (this.cliente == null) {
+			throw new Exception();
+		}
+		
 		DTO dto = DTO.getInstance();		
 		Reserva r = this.ch.modificarReserva(reserva, nombreHotel, nombreTipoHabitacion, fechaInicio, fechaFin, modificablePorHuesped);
 		Infrastructure.getInstance().getSistemaMensajeria().enviarMail(this.reserva.getCliente().getMail().toString(), "Reserva modificada", "Su reserva ha sido modificada");
@@ -135,8 +157,19 @@ public class SRController implements IHacerReservaController, ITomarReservaContr
 
 	@Override
 	public ReservaDTO seleccionarReserva(long codigoReserva) throws Exception {
+		
+		//if (this.cliente == null) {
+		//	throw new Exception();
+		//}
+		
 		DTO dto = DTO.getInstance();
 		Reserva r = this.ch.BuscarReservasPorCodigo(codigoReserva);
+		
+		Cliente clienteReserva = r.getCliente();
+		//if (this.cliente != clienteReserva) {
+		//	throw new Exception();
+		//}
+		
 		this.reserva = r;
 		return dto.map(r);
 	}

@@ -6,6 +6,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.tds.sgh.infrastructure.ICalendario;
+import org.tds.sgh.infrastructure.Infrastructure;
+
 import java.util.GregorianCalendar;
 
 
@@ -182,8 +186,14 @@ public class CadenaHotelera
 		return cliente;
 	}
 	
-	public Set<Hotel> sugerirAlternativas(String pais, String nombreTipoHabitacion, GregorianCalendar fechaInicio, GregorianCalendar fechaFin) {
+	public Set<Hotel> sugerirAlternativas(String pais, String nombreTipoHabitacion, GregorianCalendar fechaInicio, GregorianCalendar fechaFin) throws Exception {
 		
+		boolean existeTipoHabitacion = this.tiposHabitacion.containsKey(nombreTipoHabitacion);
+		
+		if (!existeTipoHabitacion) {
+			throw new Exception();
+		}
+				
 		Set<Hotel> hotelesConDisp = new HashSet<Hotel>();
 		
 		for (Hotel h: this.hoteles.values()) {
@@ -220,11 +230,27 @@ public class CadenaHotelera
 	}
 	
 	public Set<Reserva> buscarReservasDelCliente(Cliente cliente) {
+		
+		ICalendario cal = Infrastructure.getInstance().getCalendario();
+		
 		Set<Reserva> rs = new HashSet<Reserva>();
 		for (Hotel h: this.hoteles.values()) {
 			Set<Reserva> resHotelCliente = h.buscarReservasCliente(cliente);
 			rs.addAll(resHotelCliente);
 		}
+		
+		for (Reserva r: rs) {
+			boolean estaEnElPasado = cal.esPasada(r.getFechaFin());
+			if (estaEnElPasado) {
+				rs.remove(r);
+			}
+			
+			boolean estaTomada = r.estado().equals(EstadoReserva.Tomada);
+			if (estaTomada) {
+				rs.remove(r);
+			}
+		}
+		
 		return rs;
 	}
 	
@@ -270,9 +296,9 @@ public class CadenaHotelera
 	
 	public Reserva BuscarReservasPorCodigo(long codigo){
 		
-		Reserva r= null;
+		Reserva r = null;
 		for (Hotel h: this.hoteles.values()) {
-			r = h.BuscarReservaPorCodigo(codigo);
+			r = h.BuscarReservaPorCodigo(codigo); 
 			if (r!=null) {
 				break;
 			}
