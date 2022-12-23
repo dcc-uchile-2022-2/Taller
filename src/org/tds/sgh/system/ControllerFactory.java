@@ -29,22 +29,20 @@ public class ControllerFactory implements IControllerFactory
 	public ICancelarReservaController createCancelarReservaController()
 	{
 		// TODO
-		throw new NotImplementedException();
+		//throw new NotImplementedException();
+		return new SRController(this.cadenaHotelera);
 	}
 	
 	@Override
 	public IHacerReservaController createHacerReservaController()
 	{
 		return new SRController(this.cadenaHotelera);
-		// TODO
-		//throw new NotImplementedException();
 	}
 	
 	@Override
 	public IModificarReservaController createModificarReservaController()
 	{
-		// TODO
-		throw new NotImplementedException();
+		return new SRController(this.cadenaHotelera);
 	}
 	
 	@Override

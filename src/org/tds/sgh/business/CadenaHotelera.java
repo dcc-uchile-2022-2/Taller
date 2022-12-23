@@ -169,7 +169,14 @@ public class CadenaHotelera
 	
 	// Implementación
 	
-	public Cliente registrarCliente(String rut, String nombre, String direccion, String telefono, String mail) {
+	public Cliente registrarCliente(String rut, String nombre, String direccion, String telefono, String mail) throws Exception {
+		
+		boolean clienteYaExiste = this.clientes.containsKey(rut);
+		if (clienteYaExiste) {
+			throw new Exception();
+		}
+		
+		
 		Cliente cliente = new Cliente(rut, nombre, direccion, telefono, mail);
 		this.clientes.put(rut, cliente);
 		return cliente;
@@ -193,7 +200,13 @@ public class CadenaHotelera
 		return hotelesConDisp;
 	}
 	
-	public boolean confirmarDisponibilidad(String nombreHotel, String nombreTipoHabitacion, GregorianCalendar fechaInicio, GregorianCalendar fechaFin) {
+	public boolean confirmarDisponibilidad(String nombreHotel, String nombreTipoHabitacion, GregorianCalendar fechaInicio, GregorianCalendar fechaFin) throws Exception{
+		
+		boolean existeTipoHabitacion = this.tiposHabitacion.containsKey(nombreTipoHabitacion);
+		if (!existeTipoHabitacion) {
+			throw new Exception();
+		}
+		
 		Hotel hotel = this.hoteles.get(nombreHotel);
 		return  hotel.confirmarDisponibilidad(nombreTipoHabitacion, fechaInicio, fechaFin);
 	}
@@ -231,15 +244,28 @@ public class CadenaHotelera
 		return this.buscarCliente(rut);
 	}
 
-	public Reserva modificarReserva(String nombreHotel, String nombreTipoHabitacion, GregorianCalendar fi, GregorianCalendar ff, boolean mph) {
+	public Reserva modificarReserva(Reserva reserva, String nombreHotel, String nombreTipoHabitacion, GregorianCalendar fi, GregorianCalendar ff, boolean mph) {
 
-		Hotel h = this.hoteles.get(nombreHotel);
-		for (Reserva reserva : h.getReservas() ) {
-			//if ( reserva.coincide(nombreTipoHabitacion, ff, fi) ) {
-				return reserva;
-			//}			
-		}
-		return null;
+		// Remueve la reserva del hotel original. TODO: Mover a hotel esta responsabilidad.
+		Hotel h = this.hoteles.get(reserva.getHotel().getNombre());
+		h.getReservas().remove(reserva);
+		
+		reserva.setHotel(this.hoteles.get(nombreHotel));
+		reserva.setTipoHabitacion(this.tiposHabitacion.get(nombreTipoHabitacion));
+		reserva.setFechaInicio(fi);
+		reserva.setFechaFin(ff);
+		reserva.setMPH(mph);
+		
+		
+		return reserva;
+	
+		//Hotel h = this.hoteles.get(nombreHotel);
+		//for (Reserva reserva : h.getReservas() ) {
+		//		//if ( reserva.coincide(nombreTipoHabitacion, ff, fi) ) {
+		//		return reserva;
+		//	//}			
+		//}
+		//return null;
 	}
 	
 	public Reserva BuscarReservasPorCodigo(long codigo){

@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.tds.sgh.business.CadenaHotelera;
 import org.tds.sgh.business.Cliente;
+import org.tds.sgh.business.EstadoReserva;
 import org.tds.sgh.business.Habitacion;
 import org.tds.sgh.business.Hotel;
 import org.tds.sgh.business.Reserva;
@@ -16,9 +17,10 @@ import org.tds.sgh.dtos.ClienteDTO;
 import org.tds.sgh.dtos.DTO;
 import org.tds.sgh.dtos.HotelDTO;
 import org.tds.sgh.dtos.ReservaDTO;
+import org.tds.sgh.infrastructure.ICalendario;
 import org.tds.sgh.infrastructure.Infrastructure;
 
-public class SRController implements IHacerReservaController, ITomarReservaController {
+public class SRController implements IHacerReservaController, ITomarReservaController, ICancelarReservaController, IModificarReservaController {
 	
 	private CadenaHotelera ch;
 	private Cliente cliente;
@@ -53,6 +55,7 @@ public class SRController implements IHacerReservaController, ITomarReservaContr
 	@Override
 	public ClienteDTO registrarCliente(String rut, String nombre, String direccion, String telefono, String mail) 
 			throws Exception {
+		
 		DTO dto = DTO.getInstance();		
 		Cliente cliente = this.ch.registrarCliente(rut, nombre, direccion, telefono, mail);
 		this.cliente=cliente;
@@ -63,6 +66,18 @@ public class SRController implements IHacerReservaController, ITomarReservaContr
 	@Override
 	public boolean confirmarDisponibilidad(String nombreHotel, String nombreTipoHabitacion,
 			GregorianCalendar fechaInicio, GregorianCalendar fechaFin) throws Exception {
+		
+		ICalendario cal = Infrastructure.getInstance().getCalendario();
+		
+		boolean fechaInicioEnElPasado = cal.esPasada(fechaInicio);
+		if (fechaInicioEnElPasado) {
+			throw new Exception();
+		}
+		
+		boolean fechaInicioPosteriorAFechaFin = cal.esPosterior(fechaInicio, fechaFin);
+		if (fechaInicioPosteriorAFechaFin) {
+			throw new Exception();
+		}
 		
 		return 	this.ch.confirmarDisponibilidad(nombreHotel, nombreTipoHabitacion, fechaInicio, fechaFin);
 	}
@@ -103,7 +118,8 @@ public class SRController implements IHacerReservaController, ITomarReservaContr
 	public ReservaDTO modificarReserva(String nombreHotel, String nombreTipoHabitacion, GregorianCalendar fechaInicio,
 			GregorianCalendar fechaFin, boolean modificablePorHuesped) throws Exception {
 		DTO dto = DTO.getInstance();		
-		Reserva r = this.ch.modificarReserva(nombreHotel, nombreTipoHabitacion, fechaFin, fechaFin, modificablePorHuesped);
+		Reserva r = this.ch.modificarReserva(reserva, nombreHotel, nombreTipoHabitacion, fechaInicio, fechaFin, modificablePorHuesped);
+		Infrastructure.getInstance().getSistemaMensajeria().enviarMail(this.reserva.getCliente().getMail().toString(), "Reserva modificada", "Su reserva ha sido modificada");
 		this.reserva = r;
 		return dto.map(r);
 	}
@@ -145,6 +161,17 @@ public class SRController implements IHacerReservaController, ITomarReservaContr
 		
 		Infrastructure.getInstance().getSistemaFacturacion().iniciarEstadia(dto.map(reserva));
 		return dto.map(reserva);
+	}
+
+
+	@Override
+	public ReservaDTO cancelarReservaDelCliente() throws Exception {
+		DTO dto = DTO.getInstance();
+		this.reserva.setEstado(EstadoReserva.Cancelada);
+		
+		Infrastructure.getInstance().getSistemaMensajeria().enviarMail(this.reserva.getCliente().getMail().toString(), "Reserva cancelada", "Su reserva ha sido cancelada");
+		
+		return dto.map(this.reserva);
 	}
 
 	
