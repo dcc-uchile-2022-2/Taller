@@ -235,9 +235,20 @@ public class CadenaHotelera
 
 		Hotel h = this.hoteles.get(nombreHotel);
 		for (Reserva reserva : h.getReservas() ) {
-			if ( reserva.coincide(nombreTipoHabitacion, ff, fi) ) {																	
-				h.crearReserva(this.tiposHabitacion.get(nombreTipoHabitacion), reserva.getCliente(), ff, fi, mph);
-			}			
+			
+			boolean estaDisponibble = h.confirmarDisponibilidad(nombreTipoHabitacion, ff, fi);
+			
+			if(estaDisponibble) {
+				if ( reserva.coincide(nombreTipoHabitacion, ff, fi) ) {																	
+					return h.crearReserva(this.tiposHabitacion.get(nombreTipoHabitacion), reserva.getCliente(), ff, fi, mph);
+				}
+			}else {
+				
+				Hotel hdp = this.sugerirAlternativas(h.getPais(), nombreTipoHabitacion, fi, ff);
+			
+			}
+						
+			
 		}
 		return null;
 	}
