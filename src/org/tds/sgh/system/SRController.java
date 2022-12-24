@@ -208,9 +208,6 @@ public class SRController implements IHacerReservaController, ITomarReservaContr
 		return dto.map(reserva);
 	}
 
-<<<<<<< HEAD
-=======
-
 	@Override
 	public ReservaDTO cancelarReservaDelCliente() throws Exception {
 		DTO dto = DTO.getInstance();
@@ -220,11 +217,4 @@ public class SRController implements IHacerReservaController, ITomarReservaContr
 		
 		return dto.map(this.reserva);
 	}
-
-	
-
-	
-	
-
->>>>>>> SGM3
 }
