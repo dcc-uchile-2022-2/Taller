@@ -22,11 +22,11 @@ import org.tds.sgh.infrastructure.Infrastructure;
 
 public class SRController implements IHacerReservaController, ITomarReservaController, ICancelarReservaController, IModificarReservaController {
 	
-	private CadenaHotelera ch;
+	protected CadenaHotelera ch;
 	private Cliente cliente;
 	private HashMap<String,Cliente> clienteMap;
 	private Set<Cliente> clientes;
-	private Reserva reserva;
+	protected Reserva reserva;
 	
 	public  SRController(CadenaHotelera ch){
 		this.ch = ch;
@@ -34,12 +34,19 @@ public class SRController implements IHacerReservaController, ITomarReservaContr
 
 
 	@Override
-	public Set<ClienteDTO> buscarCliente(String patronNombreCliente) {
+	public Set<ClienteDTO> buscarCliente(String patronNombreCliente)  {
 		
-		DTO dto = DTO.getInstance();		
-		Set<Cliente> clientes = this.ch.buscarClientes(patronNombreCliente);
-		this.clientes=clientes;
-		return dto.mapClientes(clientes);
+		if(patronNombreCliente == null) {
+			DTO dto = DTO.getInstance();
+			return dto.mapClientes(clientes);
+			
+		}else {			
+			DTO dto = DTO.getInstance();			
+			Set<Cliente> clientes = this.ch.buscarClientes(patronNombreCliente);
+			this.clientes=clientes;
+			return dto.mapClientes(clientes);			
+		}		
+
 	}
 
 
@@ -134,17 +141,21 @@ public class SRController implements IHacerReservaController, ITomarReservaContr
 	@Override
 	public ReservaDTO modificarReserva(String nombreHotel, String nombreTipoHabitacion, GregorianCalendar fechaInicio,
 			GregorianCalendar fechaFin, boolean modificablePorHuesped) throws Exception {
-		
-		if (this.cliente == null) {
-			throw new Exception();
+				
+		DTO dto = DTO.getInstance();
+		if(modificablePorHuesped) {
+			Reserva r = this.ch.modificarReserva(reserva, nombreHotel, nombreTipoHabitacion, fechaInicio, fechaFin, modificablePorHuesped);
+			Infrastructure.getInstance().getSistemaMensajeria().enviarMail(this.reserva.getCliente().getMail().toString(), "Reserva modificada", "Su reserva ha sido modificada");
+			this.reserva = r;
+			return dto.map(r);			
+		}else {
+			Infrastructure.getInstance().getSistemaMensajeria().enviarMail(this.reserva.getCliente().getMail().toString(), "Reserva no modificada", "Su reserva no puede ser modificada");
+			throw new Exception("La reserva no puede ser modificada por Huesped");
 		}
 		
-		DTO dto = DTO.getInstance();		
-		Reserva r = this.ch.modificarReserva(reserva, nombreHotel, nombreTipoHabitacion, fechaInicio, fechaFin, modificablePorHuesped);
-		Infrastructure.getInstance().getSistemaMensajeria().enviarMail(this.reserva.getCliente().getMail().toString(), "Reserva modificada", "Su reserva ha sido modificada");
-		this.reserva = r;
-		return dto.map(r);
 	}
+	
+
 
 
 	@Override
@@ -158,17 +169,18 @@ public class SRController implements IHacerReservaController, ITomarReservaContr
 	@Override
 	public ReservaDTO seleccionarReserva(long codigoReserva) throws Exception {
 		
-		//if (this.cliente == null) {
-		//	throw new Exception();
-		//}
+		//Test: Sistema no selecciona reserva de cliente no seleccionado
+		if (this.cliente == null) {
+			throw new Exception();
+		}
 		
 		DTO dto = DTO.getInstance();
 		Reserva r = this.ch.BuscarReservasPorCodigo(codigoReserva);
 		
-		Cliente clienteReserva = r.getCliente();
-		//if (this.cliente != clienteReserva) {
-		//	throw new Exception();
-		//}
+		//Test: Sistema no selecciona reserva de cliente distinto al seleccionado
+		if (this.cliente != r.getCliente()) {
+			throw new Exception("cliente es distinto al seleccionado");
+		}	
 		
 		this.reserva = r;
 		return dto.map(r);

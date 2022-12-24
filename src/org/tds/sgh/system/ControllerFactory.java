@@ -49,7 +49,7 @@ public class ControllerFactory implements IControllerFactory
 	public ITomarReservaController createTomarReservaController()
 	{
 		// TODO
-		return new SRController(this.cadenaHotelera);
+		return new SRController2(this.cadenaHotelera);
 	}
 	
 	
