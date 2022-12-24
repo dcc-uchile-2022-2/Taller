@@ -49,9 +49,30 @@ public class Reserva {
 		
 		ICalendario cal = Infrastructure.getInstance().getCalendario();
 		
-		return this.tipoHabitacion.getNombre().equals(nombreTipoHabitacion) && this.estado.equals(EstadoReserva.Pendiente)  &&
-				!(cal.esAnterior(this.fechaInicio, fechaFin) ||
-				cal.esPosterior(this.fechaFin, fechaInicio) );
+		//System.out.println(nombreTipoHabitacion);
+		//System.out.println(this.tipoHabitacion.getNombre());
+		//System.out.println(this.tipoHabitacion.getNombre().equals(nombreTipoHabitacion));
+		
+		//boolean _coincide = this.tipoHabitacion.getNombre().equals(nombreTipoHabitacion) && this.estado.equals(EstadoReserva.Pendiente) &&
+		//		!(cal.esAnterior(this.fechaInicio, fechaFin) ||
+		//		cal.esPosterior(this.fechaFin, fechaInicio)) && 
+		//		(cal.esMismoDia(this.fechaFin, fechaInicio) ||
+		//		 cal.esMismoDia(this.fechaInicio, fechaFin));
+		
+		boolean coincideTipoHabitacion = this.tipoHabitacion.getNombre().equals(nombreTipoHabitacion);
+		boolean esEstadoReservaPendiente = this.estado.equals(EstadoReserva.Pendiente);
+		boolean intersectaReserva = !(cal.esPosterior(this.fechaInicio, fechaFin) || cal.esAnterior(this.fechaFin, fechaInicio));
+		boolean noEsReservaConsecutiva = !(cal.esMismoDia(this.fechaFin, fechaInicio) || cal.esMismoDia(this.fechaInicio, fechaFin));
+				
+		//boolean _coincide = this.tipoHabitacion.getNombre().equals(nombreTipoHabitacion) && this.estado.equals(EstadoReserva.Pendiente) &&
+		//		!(cal.esPosterior(this.fechaInicio, fechaFin) ||
+		//		cal.esAnterior(this.fechaFin, fechaInicio));
+		
+		boolean _coincide = coincideTipoHabitacion && esEstadoReservaPendiente && intersectaReserva && noEsReservaConsecutiva;
+		
+		//System.out.println(_coincide);
+		
+		return _coincide;
 		
 				
 	}
@@ -128,7 +149,28 @@ public class Reserva {
 		this.habitacion= habitacion;
 	}
 
+	public void setHotel(Hotel hotel) {
+		// TODO Auto-generated method stub
+		this.hotel = hotel;
+	}
 
+	public void setTipoHabitacion(TipoHabitacion th) {
+		// TODO Auto-generated method stub
+		this.tipoHabitacion = th;
+	}
 
-	
+	public void setFechaInicio(GregorianCalendar fi) {
+		// TODO Auto-generated method stub
+		this.fechaInicio = fi;
+	}
+
+	public void setFechaFin(GregorianCalendar ff) {
+		// TODO Auto-generated method stub
+		this.fechaFin = ff;
+	}
+
+	public void setMPH(boolean mph) {
+		// TODO Auto-generated method stub
+		this.modificablePorHuesped = mph;
+	}
 }

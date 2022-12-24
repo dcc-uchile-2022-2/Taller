@@ -6,6 +6,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.tds.sgh.infrastructure.ICalendario;
+import org.tds.sgh.infrastructure.Infrastructure;
+
 import java.util.GregorianCalendar;
 
 
@@ -169,14 +173,27 @@ public class CadenaHotelera
 	
 	// Implementación
 	
-	public Cliente registrarCliente(String rut, String nombre, String direccion, String telefono, String mail) {
+	public Cliente registrarCliente(String rut, String nombre, String direccion, String telefono, String mail) throws Exception {
+		
+		boolean clienteYaExiste = this.clientes.containsKey(rut);
+		if (clienteYaExiste) {
+			throw new Exception();
+		}
+		
+		
 		Cliente cliente = new Cliente(rut, nombre, direccion, telefono, mail);
 		this.clientes.put(rut, cliente);
 		return cliente;
 	}
 	
-	public Set<Hotel> sugerirAlternativas(String pais, String nombreTipoHabitacion, GregorianCalendar fechaInicio, GregorianCalendar fechaFin) {
+	public Set<Hotel> sugerirAlternativas(String pais, String nombreTipoHabitacion, GregorianCalendar fechaInicio, GregorianCalendar fechaFin) throws Exception {
 		
+		boolean existeTipoHabitacion = this.tiposHabitacion.containsKey(nombreTipoHabitacion);
+		
+		if (!existeTipoHabitacion) {
+			throw new Exception();
+		}
+				
 		Set<Hotel> hotelesConDisp = new HashSet<Hotel>();
 		
 		for (Hotel h: this.hoteles.values()) {
@@ -193,7 +210,13 @@ public class CadenaHotelera
 		return hotelesConDisp;
 	}
 	
-	public boolean confirmarDisponibilidad(String nombreHotel, String nombreTipoHabitacion, GregorianCalendar fechaInicio, GregorianCalendar fechaFin) {
+	public boolean confirmarDisponibilidad(String nombreHotel, String nombreTipoHabitacion, GregorianCalendar fechaInicio, GregorianCalendar fechaFin) throws Exception{
+		
+		boolean existeTipoHabitacion = this.tiposHabitacion.containsKey(nombreTipoHabitacion);
+		if (!existeTipoHabitacion) {
+			throw new Exception();
+		}
+		
 		Hotel hotel = this.hoteles.get(nombreHotel);
 		return  hotel.confirmarDisponibilidad(nombreTipoHabitacion, fechaInicio, fechaFin);
 	}
@@ -207,11 +230,27 @@ public class CadenaHotelera
 	}
 	
 	public Set<Reserva> buscarReservasDelCliente(Cliente cliente) {
+		
+		ICalendario cal = Infrastructure.getInstance().getCalendario();
+		
 		Set<Reserva> rs = new HashSet<Reserva>();
 		for (Hotel h: this.hoteles.values()) {
 			Set<Reserva> resHotelCliente = h.buscarReservasCliente(cliente);
 			rs.addAll(resHotelCliente);
 		}
+		
+		for (Reserva r: rs) {
+			boolean estaEnElPasado = cal.esPasada(r.getFechaFin());
+			if (estaEnElPasado) {
+				rs.remove(r);
+			}
+			
+			boolean estaTomada = r.estado().equals(EstadoReserva.Tomada);
+			if (estaTomada) {
+				rs.remove(r);
+			}
+		}
+		
 		return rs;
 	}
 	
@@ -231,33 +270,35 @@ public class CadenaHotelera
 		return this.buscarCliente(rut);
 	}
 
-	public Reserva modificarReserva(String nombreHotel, String nombreTipoHabitacion, GregorianCalendar fi, GregorianCalendar ff, boolean mph) {
+	public Reserva modificarReserva(Reserva reserva, String nombreHotel, String nombreTipoHabitacion, GregorianCalendar fi, GregorianCalendar ff, boolean mph) {
 
-		Hotel h = this.hoteles.get(nombreHotel);
-		for (Reserva reserva : h.getReservas() ) {
-			
-			boolean estaDisponibble = h.confirmarDisponibilidad(nombreTipoHabitacion, ff, fi);
-			
-			if(estaDisponibble) {
-				if ( reserva.coincide(nombreTipoHabitacion, ff, fi) ) {																	
-					return h.crearReserva(this.tiposHabitacion.get(nombreTipoHabitacion), reserva.getCliente(), ff, fi, mph);
-				}
-			}else {
-				
-				Hotel hdp = this.sugerirAlternativas(h.getPais(), nombreTipoHabitacion, fi, ff);
-			
-			}
-						
-			
-		}
-		return null;
+		// Remueve la reserva del hotel original. TODO: Mover a hotel esta responsabilidad.
+		Hotel h = this.hoteles.get(reserva.getHotel().getNombre());
+		h.getReservas().remove(reserva);
+		
+		reserva.setHotel(this.hoteles.get(nombreHotel));
+		reserva.setTipoHabitacion(this.tiposHabitacion.get(nombreTipoHabitacion));
+		reserva.setFechaInicio(fi);
+		reserva.setFechaFin(ff);
+		reserva.setMPH(mph);
+		
+		
+		return reserva;
+	
+		//Hotel h = this.hoteles.get(nombreHotel);
+		//for (Reserva reserva : h.getReservas() ) {
+		//		//if ( reserva.coincide(nombreTipoHabitacion, ff, fi) ) {
+		//		return reserva;
+		//	//}			
+		//}
+		//return null;
 	}
 	 
 	public Reserva BuscarReservasPorCodigo(long codigo){
 		
-		Reserva r= null;
+		Reserva r = null;
 		for (Hotel h: this.hoteles.values()) {
-			r = h.BuscarReservaPorCodigo(codigo);
+			r = h.BuscarReservaPorCodigo(codigo); 
 			if (r!=null) {
 				break;
 			}

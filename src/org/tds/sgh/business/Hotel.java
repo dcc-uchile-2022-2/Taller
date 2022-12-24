@@ -85,13 +85,22 @@ public class Hotel
 		if (CantidadHabitaciones == 0) {
 			return false;
 		}
-		int CantidadReservas =0;
-		for( Reserva r : this.reservas) {
-			if (!r.coincide(nombreTipoHabitacion,fechaInicio,fechaFin)) {
+		int CantidadReservas = 0;
+		for(Reserva r : this.reservas) {
+			//if (!r.coincide(nombreTipoHabitacion,fechaInicio,fechaFin)) {
+			if (r.coincide(nombreTipoHabitacion,fechaInicio,fechaFin)) {
 				CantidadReservas++;
 			}
 		}
-		return CantidadReservas<CantidadHabitaciones;
+		
+		//System.out.println(CantidadReservas);		
+		//System.out.println(CantidadHabitaciones);
+		
+		boolean disponibilidad = CantidadReservas < CantidadHabitaciones;
+		
+		//System.out.println(disponibilidad);
+		
+		return disponibilidad;
 	}
 	
 	public Reserva crearReserva(TipoHabitacion nombreTipoHabitacion, Cliente cliente, GregorianCalendar fechaInicio, GregorianCalendar fechaFin,
